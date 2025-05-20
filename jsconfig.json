@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@core/*": ["core/*"],
+      "@components/*": ["core/components/*"],
+      "@constants/*": ["core/constants/*"],
+      "@global/*": ["core/global/*"],
+      "@services/*": ["core/services/*"],
+      "@store/*": ["core/store/*"],
+      "@themes/*": ["core/themes/*"],
+      "@pages/*": ["pages/*"],
+      "@utils/*": ["utils/*"],
+      "@layout/*": ["layout/*"]
+    }
+
+  }
+
+  
+}
