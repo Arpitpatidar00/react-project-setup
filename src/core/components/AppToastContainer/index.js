@@ -4,7 +4,7 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const AppToastContainer = () => {
+export const AppToastContainer = () => {
   return (
     <ToastContainer
       position="top-right"
@@ -19,5 +19,3 @@ const AppToastContainer = () => {
     />
   );
 };
-
-export default AppToastContainer;

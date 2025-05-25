@@ -1,90 +1,152 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk, logoutThunk, signupThunk } from "../thunk/auth.thunk";
+import { createSlice } from '@reduxjs/toolkit';
+import {
+  loginThunk,
+  signupThunk,
+  logoutThunk,
+  verifyOtpThunk,
+  forgotPasswordThunk,
+  resetPasswordThunk,
+} from '@/core/store/thunk';
 
 const initialState = {
-  isAuthenticated: false,
-  token: "",
-  tokenExpiry: "",
   user: null,
-  role: null,
-  isLoading: false,
+  token: null,
+  isAuthenticated: false,
+  loading: false,
   error: null,
+  otpResult: null,
+  forgotPasswordResult: null,
+  resetPasswordResult: null,
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    updateUserState: (state, action) => {
-      // Update the nested user object
-      if (state.user) {
-        state.user = { ...state.user, ...action.payload };
-      }
+    clearError: (state) => {
+      state.error = null;
     },
-    updateFollowState: (state, action) => {
-      if (state.user) {
-        state.user.follow = action.payload;
-      }
+    clearOtpResult: (state) => {
+      state.otpResult = null;
     },
-    logout: (state) => {
-      state.isAuthenticated = false;
-      state.token = "";
-      state.tokenExpiry = "";
-      state.user = null;
-      state.role = null;
+    clearForgotPasswordResult: (state) => {
+      state.forgotPasswordResult = null;
+    },
+    clearResetPasswordResult: (state) => {
+      state.resetPasswordResult = null;
     },
   },
   extraReducers: (builder) => {
+    // Login
     builder
       .addCase(loginThunk.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
+        state.error = null;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
-        state.error = null;
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.user = action.payload.user; // This includes both user and token
+        state.loading = false;
+        state.user = action.payload.user;
         state.token = action.payload.token;
-        state.role = action.payload.user.role; // Set role from nested user
+        state.isAuthenticated = true;
       })
       .addCase(loginThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
+        state.loading = false;
+        state.error = action.payload || 'Login failed';
+      });
+
+    // Signup
+    builder
       .addCase(signupThunk.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
         state.error = null;
       })
       .addCase(signupThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isAuthenticated = true;
-        state.token = action.payload.token;
+        state.loading = false;
         state.user = action.payload.user;
-        state.role = action.payload.user.role;
-        state.error = null;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addCase(signupThunk.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
+        state.loading = false;
+        state.error = action.payload || 'Signup failed';
+      });
 
+    // Logout
+    builder
+      .addCase(logoutThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(logoutThunk.fulfilled, (state) => {
-        state.isAuthenticated = false;
-        state.token = "";
-        state.tokenExpiry = "";
+        state.loading = false;
         state.user = null;
-        state.role = null;
+        state.token = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logoutThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Logout failed';
+      });
+
+    // Verify OTP
+    builder
+      .addCase(verifyOtpThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.otpResult = null;
+      })
+      .addCase(verifyOtpThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.otpResult = action.payload;
+      })
+      .addCase(verifyOtpThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'OTP verification failed';
+      });
+
+    // Forgot Password
+    builder
+      .addCase(forgotPasswordThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.forgotPasswordResult = null;
+      })
+      .addCase(forgotPasswordThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.forgotPasswordResult = action.payload;
+      })
+      .addCase(forgotPasswordThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to send reset link';
+      });
+
+
+    builder
+      .addCase(resetPasswordThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.resetPasswordResult = null;
+      })
+      .addCase(resetPasswordThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.resetPasswordResult = action.payload;
+      })
+      .addCase(resetPasswordThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Password reset failed';
       });
   },
 });
-
-export const { updateUserState, updateFollowState, logout } = authSlice.actions;
-
-export const selectUserData = (state) => state.auth?.user;
-export const selectToken = (state) => state.auth.token;
-export const selectAuthData = (state) => state.auth;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-export const selectUserRole = (state) => state.auth.user?.role;
-export const selectIsLoading = (state) => state.auth.isLoading;
 
+
+export const selectUser = (state) => state.auth.user;
+export const selectToken = (state) => state.auth.user.token
+export const selectUserRole = (state) => state.auth.user?.role || null;
+
+export const selectAuthLoading = (state) => state.auth.loading;
+
+export const selectAuthError = (state) => state.auth.error;
+
+export const { clearError, clearOtpResult, clearForgotPasswordResult, clearResetPasswordResult } = authSlice.actions;
 export default authSlice.reducer;

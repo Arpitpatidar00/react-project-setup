@@ -3,3 +3,4 @@ export * from "./apiHandler";
 export * from "./queryClient";
 export * from "./errorService";
 export * from "./apiEndpoint";
+export * from "./api/index";

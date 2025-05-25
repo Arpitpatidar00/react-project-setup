@@ -31,9 +31,12 @@ export const ROUTES = {
     REVIEWS: "reviews",
   },
   AUTH: {
-    LOGOUT: "/logout",
     LOGIN: "/login",
-    REGISTER: "/register",
+    SIGNUP: "/signup",
+    FORGOT_PASSWORD: "/forgot-password",
+    VERIFY_OTP: "/verify-otp",
+    RESET_PASSWORD: "/reset-password",
+    LOGOUT: "/logout",
   },
   COMMON: {
     NOT_FOUND: "/error",

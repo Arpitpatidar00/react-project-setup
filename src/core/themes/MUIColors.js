@@ -1,6 +1,4 @@
-import { ThemeVariants } from "./themeConstants";
-import { APP_COLORS } from "./colors";
-import { mapColorsToMui } from "./mapColorsToMui";
+import { APP_COLORS, ThemeVariants, mapColorsToMui } from "./index";
 
 export const MUI_COLORS = {
   [ThemeVariants.THEME1_LIGHT]: {

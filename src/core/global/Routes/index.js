@@ -14,22 +14,21 @@ import {
 } from "@global/Routes/ProtectedRoutes";
 import { Navbar } from "@layout/index";
 import { AppNProgressBar } from "@components/index";
-// import AdminLayout from "@/components/admin/AdminLayout";
-// import UserLayout from "@/layout/UserLayout";
 
 // Lazy load pages
 const HomePage = lazy(() => import("@/pages/Home"));
-const LoginPage = lazy(() => import("@/pages/Login"));
-const RegisterPage = lazy(() => import("@/pages/Register"));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const SignUpPage = lazy(() => import("@/pages/SignUpPage"));
 const ProfilePage = lazy(() => import("@/pages/Profile"));
+const OtpVerificationPage = lazy(() => import("@/pages/otpVerificationPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/resetPasswordPage"));
+const ForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage"));
+
 const FavoritesPage = lazy(() => import("@/pages/Favorites"));
 const WatchlistPage = lazy(() => import("@/pages/Watchlist"));
 const MovieListPage = lazy(() => import("@/pages/MovieList"));
 const MovieDetailPage = lazy(() => import("@/pages/MovieDetail"));
-// const AdminLogin = lazy(() => import("@pages/admin/AdminLogin"));
-// const AdminDashboard = lazy(() => import("@pages/admin/Dashboard"));
-// const AdminMovies = lazy(() => import("@pages/admin/Movies"));
-// const AdminUsers = lazy(() => import("@pages/admin/Users"));
+
 const NotFoundPage = lazy(() => import("@/pages/NotFound"));
 
 const AppRouter = () => {
@@ -40,16 +39,25 @@ const AppRouter = () => {
         <Routes>
           {/* Public Routes */}
           <Route
-            element={
-              // <UnProtectedRoute>
-              <Outlet />
-              // </UnProtectedRoute>
-            }
+            element={<Outlet /> /* Wrap with UnProtectedRoute if needed */}
           >
             <Route path={ROUTES.AUTH.LOGIN} element={<LoginPage />} />
-            <Route path={ROUTES.AUTH.REGISTER} element={<RegisterPage />} />
+            <Route path={ROUTES.AUTH.SIGNUP} element={<SignUpPage />} />
+            <Route
+              path={ROUTES.AUTH.FORGOT_PASSWORD}
+              element={<ForgotPasswordPage />}
+            />
+            <Route
+              path={ROUTES.AUTH.RESET_PASSWORD}
+              element={<ResetPasswordPage />}
+            />
+            <Route
+              path={ROUTES.AUTH.VERIFY_OTP}
+              element={<OtpVerificationPage />}
+            />
           </Route>
 
+          {/* Protected User Routes */}
           <Route
             element={<ProtectedRoute>{/* <UserLayout /> */}</ProtectedRoute>}
           >
@@ -64,29 +72,7 @@ const AppRouter = () => {
             />
           </Route>
 
-          {/* Admin Routes */}
-          {/* <Route
-            element={
-              <AdminUnProtectedRoute>
-                <Outlet />
-              </AdminUnProtectedRoute>
-            }
-          >
-            <Route path={ROUTES.ADMIN.LOGIN} element={<AdminLogin />} />
-          </Route> */}
-
-          {/* <Route
-            path={ROUTES.ADMIN.INDEX}
-            element={
-              <AdminProtectedRoute>
-                <AdminLayout />
-              </AdminProtectedRoute>
-            }
-          >
-            <Route index element={<AdminDashboard />} />
-            <Route path={ROUTES.ADMIN.MOVIES} element={<AdminMovies />} />
-            <Route path={ROUTES.ADMIN.USERS} element={<AdminUsers />} />
-          </Route> */}
+          {/* Admin Routes (commented for now) */}
 
           {/* Fallback */}
           <Route path={ROUTES.COMMON.NOT_FOUND} element={<NotFoundPage />} />

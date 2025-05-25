@@ -1,13 +1,13 @@
 import { createTheme as createMuiTheme } from "@mui/material";
-import { cardRadius } from "./constants";
-import { createPalette } from "./createPalette";
-import { createComponents } from "./createComponents";
-import { createShadows } from "./createShadows";
-import { createTypography } from "./createTypography";
+import {
+  cardRadius,
+  createPalette,
+  createShadows,
+  createTypography,
+} from "./index";
 
 export function createTheme({ theme }) {
   const palette = createPalette(theme);
-  const components = createComponents({ palette });
   const shadows = createShadows();
   const typography = createTypography();
 
@@ -24,7 +24,7 @@ export function createTheme({ theme }) {
     },
     spacing: 4,
     cardRadius,
-    components,
+
     palette,
     shadows,
     typography,
